@@ -1,12 +1,34 @@
 import React, { useEffect, useState } from "react"
+import openSocket from "socket.io-client";
 import axios from "axios"
 
 const Game = ({ ...props }) => {
-  const [players, setPlayers] = useState(["a", "b", "c"])
+  const [game, setGame] = useState()
   const [wikiPage, setWikiPage] = useState()
   const [currentUrl, setCurrentUrl] = useState("Barack_Obama")
+  const [nickname, setNickname] = useState("Le joiner")
   const wikiUrl = "https://en.wikipedia.org/api/rest_v1/page/html/"
   const realUrl = "http://en.wikipedia.org/wiki/"
+  const socket = openSocket('http://34.244.216.179:5000');
+
+  useEffect(() => {
+    let search = window.location.pathname
+    let params = search.split("/")[2]
+
+    const previousState = window.history.state
+
+    if (!previousState.master) {
+      socket.on('connect', () => {
+        socket.emit("join_room", { roomId: params });
+        socket.emit("set_username", { username: nickname, roomId: params });
+        socket.on("update", data => {
+          console.log(data)
+          setGame(data)
+        })
+      });
+    }
+  }, [])
+
 
   useEffect(() => {
     axios
@@ -32,6 +54,18 @@ const Game = ({ ...props }) => {
     }
   }
 
+  const handleStart = () => {
+    let search = window.location.pathname
+    let params = search.split("/")[2]
+
+    socket.emit("start", { roomId: params });
+    socket.on("update", data => {
+      console.log(data)
+      setGame(data)
+      setCurrentUrl(data.start)
+    })
+  }
+
   return (
     <>
       <div className="flex h-screen overflow-hidden bg-white">
@@ -46,9 +80,9 @@ const Game = ({ ...props }) => {
                   <div>
                     <h3 className="font-extrabold">Players</h3>
                     <div className="flex flex-col px-2">
-                      {players.map((player, idx) => (
+                      {game && Object.values(game.players).map((player, idx) => (
                         <span className="font-light" key={idx}>
-                          {player}
+                          {player.username}
                         </span>
                       ))}
                     </div>
@@ -66,12 +100,15 @@ const Game = ({ ...props }) => {
                       />
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    className="hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 px-4 py-2 mt-2 text-sm font-medium text-center text-white transition duration-300 ease-in-out bg-indigo-600 border border-transparent rounded-sm shadow-sm"
-                  >
-                    Start Game!
+                  {game && !game.started &&
+                    <button
+                      type="button"
+                      className="hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 px-4 py-2 mt-2 text-sm font-medium text-center text-white transition duration-300 ease-in-out bg-indigo-600 border border-transparent rounded-sm shadow-sm"
+                      onClick={handleStart}
+                    >
+                      Start Game!
                   </button>
+                  }
                 </nav>
               </div>
             </div>

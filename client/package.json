@@ -26,7 +26,10 @@
     "react-dom": "^16.12.0",
     "react-helmet": "^6.1.0",
     "react-iframe": "^1.8.0",
-    "tailwindcss": "^2.0.2"
+    "socket.io": "^3.0.4",
+    "socket.io-client": "^3.0.4",
+    "tailwindcss": "^2.0.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "prettier": "2.1.2"
@@ -50,5 +53,9 @@
   },
   "bugs": {
     "url": "https://github.com/gatsbyjs/gatsby/issues"
+  },
+  "resolutions": {
+    "socket.io": "^3.0.4",
+    "socket.io-client": "^3.0.4"
   }
 }
