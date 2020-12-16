@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from "react"
+import Layout from "../components/layout"
 import axios from "axios"
 
 const Game = ({ ...props }) => {
   const [wikiPage, setWikiPage] = useState()
+  const [currentUrl, setCurrentUrl] = useState("Barack_Obama")
+  const wikiUrl = "https://en.wikipedia.org/api/rest_v1/page/html/"
+
   useEffect(() => {
     axios
-      .get("https://en.wikipedia.org/api/rest_v1/page/html/Barack_Obama")
+      .get(`${wikiUrl}${currentUrl}`)
       .then(response => setWikiPage(response.data))
       .catch(e => console.log(e))
-  }, [])
+  }, [currentUrl])
 
   useEffect(() => {
     document.querySelector("body").addEventListener("click", event => {
       event.preventDefault()
-      console.log(String(event.target))
+      const target = String(event.target)
+      if (target.includes("wikipedia.org")) {
+        setCurrentUrl(target.split("/").pop())
+      }
     })
   }, [])
 
   return (
     <>
-      {wikiPage && (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: wikiPage,
-          }}
-        ></div>
-      )}
-      <p>Game {JSON.stringify(props["*"])}</p>
+      <Layout players={["a", "b", "c"]} wikiPage={wikiPage} />
     </>
   )
 }

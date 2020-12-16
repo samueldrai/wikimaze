@@ -1,6 +1,6 @@
 import React from "react"
 
-const Sidebar = ({ players, wikiPage }) => (
+const Layout = ({ players, wikiPage }) => (
   <div className="flex h-screen overflow-hidden bg-white">
     <div className="hidden md:flex md:flex-shrink-0">
       <div className="flex flex-col w-80">
@@ -83,11 +83,20 @@ const Sidebar = ({ players, wikiPage }) => (
 
       <main className="relative flex-1">
         <div className="py-6">
-          <div className="px-4 sm:px-6 md:px-0"></div>
+          <div className="px-4 sm:px-6 md:px-0">
+            {wikiPage && (
+              <div
+                className="h-screen overflow-y-scroll wikipedia"
+                dangerouslySetInnerHTML={{
+                  __html: wikiPage,
+                }}
+              ></div>
+            )}
+          </div>
         </div>
       </main>
     </div>
   </div>
 )
 
-export default Sidebar
+export default Layout
