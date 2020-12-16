@@ -1,16 +1,41 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Link } from "gatsby"
+import openSocket from "socket.io-client";
+import { v4 as uuidv4 } from 'uuid';
+import {navigate} from 'gatsby';
+
 
 const IndexPage = () => {
   const [gameUrl, setGameUrl] = useState()
   const [nickname, setNickname] = useState()
+  const [socket, setSocket] = useState()
+
+  // useEffect(() => {
+  //   const socketInit = openSocket('http://34.244.216.179:5000');
+  //   setSocket(socketInit)
+  // },[])
 
   const handleNewGame = () => {
-    alert("Create new game")
+    const game_id = uuidv4()
+    const socket = openSocket('http://34.244.216.179:5000');
+
+    socket.on('connect', () => { 
+      socket.emit("create_room", { roomId: game_id });
+      socket.emit("set_username", { username: nickname, roomId: game_id });
+
+      navigate(`/game/${game_id}`, {
+        state: {
+          master: true,
+        }
+      });
+    });
   }
 
   const handleJoinGame = () => {
-    alert("Joining a game")
+    // socket.on('connect', () => {
+      // socket.emit("join_room", { roomId: game_id });
+      // socket.emit("set_username", { username: nickname });
+    // });
   }
 
   return (
