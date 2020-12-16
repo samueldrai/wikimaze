@@ -9,6 +9,14 @@ const Game = ({ ...props }) => {
       .then(response => setWikiPage(response.data))
       .catch(e => console.log(e))
   }, [])
+
+  useEffect(() => {
+    document.querySelector("body").addEventListener("click", event => {
+      event.preventDefault()
+      console.log(String(event.target))
+    })
+  }, [])
+
   return (
     <>
       {wikiPage && (
