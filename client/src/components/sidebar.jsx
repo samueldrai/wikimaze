@@ -1,6 +1,6 @@
 import React from "react"
 
-const Sidebar = () => (
+const Sidebar = ({ players }) => (
   <div className="flex h-screen overflow-hidden bg-white">
     <div className="hidden md:flex md:flex-shrink-0">
       <div className="flex flex-col w-64">
@@ -10,7 +10,12 @@ const Sidebar = () => (
           </div>
           <div className="flex flex-col flex-grow mt-5">
             <nav className="flex-1 px-2 space-y-1 bg-white">
-              <span>NAV</span>
+              <h3 className="font-extrabold">Players</h3>
+              <div className="flex flex-col px-2">
+                {players.map(player => (
+                  <span className="font-light">{player}</span>
+                ))}
+              </div>
             </nav>
           </div>
         </div>
