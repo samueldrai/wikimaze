@@ -27,11 +27,19 @@ module.exports = {
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
     },
-    "gatsby-plugin-postcss",
     {
       resolve: "gatsby-plugin-create-client-paths",
       options: {
         prefixes: ["/game/*", "/results/*"],
+      },
+    },
+    {
+      resolve: `gatsby-plugin-sass`,
+      options: {
+        postCssPlugins: [
+          require("tailwindcss")("./tailwind.config.js"),
+          require("autoprefixer"),
+        ],
       },
     },
     {
