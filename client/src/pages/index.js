@@ -21,7 +21,7 @@ const IndexPage = () => {
           The ultimate wikipedia racing game!
         </h2>
       </header>
-      <main className="container w-1/3 py-24 m-auto mt-4 border border-gray-200 rounded-md shadow-lg px-36">
+      <main className="container w-1/3 p-4 m-auto mt-4 border border-gray-200 rounded-md shadow-lg">
         <div className="mb-1">
           <label
             htmlFor="game"
