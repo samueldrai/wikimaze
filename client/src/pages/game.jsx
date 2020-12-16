@@ -14,19 +14,21 @@ const Game = ({ ...props }) => {
       .catch(e => console.log(e))
   }, [currentUrl])
 
-  useEffect(() => {
-    document.querySelector("body").addEventListener("click", event => {
-      event.preventDefault()
-      const target = String(event.target)
-      if (target.includes("wikipedia.org")) {
-        setCurrentUrl(target.split("/").pop())
-      }
-    })
-  }, [])
+  const handleClick = event => {
+    const target = String(event.target)
+    if (target.includes("wikipedia.org")) {
+      setCurrentUrl(target.split("/").pop())
+    }
+  }
 
   return (
     <>
-      <Layout players={["a", "b", "c"]} wikiPage={wikiPage} />
+      <Layout
+        players={["a", "b", "c"]}
+        wikiPage={wikiPage}
+        displayUrl={`${wikiUrl}${currentUrl}`}
+        handleClick={handleClick}
+      />
     </>
   )
 }
