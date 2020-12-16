@@ -6,6 +6,7 @@ const Game = ({ ...props }) => {
   const [wikiPage, setWikiPage] = useState()
   const [currentUrl, setCurrentUrl] = useState("Barack_Obama")
   const wikiUrl = "https://en.wikipedia.org/api/rest_v1/page/html/"
+  const realUrl = "http://en.wikipedia.org/wiki/"
 
   useEffect(() => {
     axios
@@ -16,6 +17,7 @@ const Game = ({ ...props }) => {
 
   const handleClick = event => {
     const target = String(event.target)
+    console.log(target)
     if (target.includes("wikipedia.org")) {
       setCurrentUrl(target.split("/").pop())
     }
@@ -26,7 +28,7 @@ const Game = ({ ...props }) => {
       <Layout
         players={["a", "b", "c"]}
         wikiPage={wikiPage}
-        displayUrl={`${wikiUrl}${currentUrl}`}
+        displayUrl={`${realUrl}${currentUrl}`}
         handleClick={handleClick}
       />
     </>
