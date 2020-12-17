@@ -1,16 +1,41 @@
 import React, { useState } from "react"
 import { Link } from "gatsby"
+import openSocket from "socket.io-client";
+import { v4 as uuidv4 } from 'uuid';
+import { navigate } from 'gatsby';
 
-const IndexPage = () => {
-  const [gameUrl, setGameUrl] = useState()
+const IndexPage = (props) => {
+  const [roomId, setRoomId] = useState()
   const [nickname, setNickname] = useState()
 
   const handleNewGame = () => {
-    alert("Create new game")
+    const game_id = uuidv4()
+    const socket = openSocket('http://34.244.216.179:5000');
+
+    socket.on('connect', () => {
+      socket.emit("create_room", { roomId: game_id });
+      socket.emit("set_username", { username: nickname, roomId: game_id });
+
+      navigate(`/game/${game_id}`, {
+        state: {
+          master: true,
+        }
+      });
+    });
   }
 
   const handleJoinGame = () => {
-    alert("Joining a game")
+    const socket = openSocket('http://34.244.216.179:5000');
+    socket.on('connect', () => {
+      socket.emit("join_room", { roomId: roomId });
+      socket.emit("set_username", { username: nickname, roomId: roomId });
+
+      navigate(`/game/${roomId}`, {
+        state: {
+          joiner: true,
+        }
+      });
+    });
   }
 
   return (
@@ -34,8 +59,8 @@ const IndexPage = () => {
               type="text"
               name="game"
               id="game"
-              value={gameUrl}
-              onChange={e => setGameUrl(e.target.value)}
+              value={roomId}
+              onChange={e => setRoomId(e.target.value)}
               className="block w-full transition duration-300 ease-in-out border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="https://wikimaze.io/1234"
             />
